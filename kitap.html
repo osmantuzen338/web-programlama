@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çevrimiçi Kitap Kiralama Sistemi</title>
+    <style>
+        /* Sayfa stili */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('kitapp.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            background-color: rgba(255, 255, 255, 0.8); 
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        
+        .menu {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        
+        .menu button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        
+        .menu button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>KİTKİR (Çevrimiçi Kitap Kiralama Sistemi)</h1>
+        <div class="menu">
+            <button onclick="goToHomepage()">Anasayfa</button>
+            <button onclick="login()">Kullanıcı Girişi</button>
+            <button onclick="guestLogin()">Misafir Girişi</button>
+            <button onclick="goToFavorites()">Favoriler</button>
+            <button onclick="rentBooks()">Kitap Kiralama</button>
+            <button onclick="viewBooks()">Kitaplar</button>
+        </div>
+    </div>
+
+    <script>
+        
+        function goToHomepage() {
+            alert("Anasayfa'ya yönlendiriliyorsunuz.");
+            window.location.href = 'kitap.html'; 
+        }
+
+        
+        function login() {
+            alert("Kullanıcı Girişi sayfasına yönlendiriliyorsunuz.");
+            window.location.href = 'giriş.html'; 
+        }
+
+        
+        function guestLogin() {
+            alert("Misafir Girişi yapıldı. Sınırlı erişim sağlandı.");
+            window.location.href='misafir.html';
+        }
+
+        function goToFavorites() {
+            alert("Favoriler sayfasına yönlendiriliyorsunuz.");
+            window.location.href = 'favoriler.html'; 
+        }
+
+        
+        function rentBooks() {
+            alert("Kitap Kiralama sayfasına yönlendiriliyorsunuz.");
+            window.location.href = 'kiralama.html'; 
+        }
+
+        
+        function viewBooks() {
+            alert("Kitaplar sayfasına yönlendiriliyorsunuz.");
+            window.location.href = 'kitaplar.html'; 
+        }
+    </script>
+
+</body>
+</html>

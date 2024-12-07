@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favoriler</title>
+    <style>
+        /* Sayfa stili */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('kitapp.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+            font-size: 2.5rem;
+        }
+
+        .favorite-books {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .book-card h3 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .book-card p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .remove-button {
+            display: none;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .remove-button:hover {
+            background-color: #c82333;
+        }
+
+        /* Ana sayfa butonu */
+        .home-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Favori Kitaplar</h1>
+        <div class="favorite-books" id="favoriteBooks"></div>
+        <a href="kitap.html" class="home-btn">Ana Sayfaya Dön</a>
+    </div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            const favoriteBooksContainer = document.getElementById('favoriteBooks');
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+            if (favorites.length === 0) {
+                favoriteBooksContainer.innerHTML = '<p style="text-align:center;">Henüz favorilere eklenen kitap yok.</p>';
+            } else {
+                favorites.forEach((book, index) => {
+                    const bookCard = document.createElement('div');
+                    bookCard.classList.add('book-card');
+                    bookCard.innerHTML = `
+                        <h3>${book.title}</h3>
+                        <p>Yazar: ${book.author}</p>
+                        <button class="remove-button" onclick="removeFromFavorites(${index})">Favorilerden Kaldır</button>
+                    `;
+
+                
+                    bookCard.addEventListener('click', function () {
+                        const removeButton = bookCard.querySelector('.remove-button');
+                        removeButton.style.display = removeButton.style.display === 'none' || removeButton.style.display === '' ? 'block' : 'none';
+                    });
+
+                    favoriteBooksContainer.appendChild(bookCard);
+                });
+            }
+        });
+
+        
+        function removeFromFavorites(index) {
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+            
+            favorites.splice(index, 1);
+
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+
+            
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>

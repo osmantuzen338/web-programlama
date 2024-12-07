@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitap Kiralama</title>
+    <style>
+        /* Sayfa stili */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('kitapp.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007BFF;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .book-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .book-card h3 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .book-card p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .rent-button, .cancel-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .rent-button:hover {
+            background-color: #218838;
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+        }
+
+        .cancel-button:hover {
+            background-color: #c82333;
+        }
+
+        .home-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .days-input {
+            width: 60px;
+            padding: 5px;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kitap Kiralama</h1>
+        <div class="book-list" id="bookList"></div>
+        <a href="kitap.html" class="home-btn">Ana Sayfaya Dön</a>
+    </div>
+
+    <script>
+        const books = [
+            { id: 1, title: 'SEFİLLER', author: 'VİCTOR HUGO', publicationDate: '2020', isRented: false, rentDays: 0, rentEndDate: null },
+            { id: 2, title: 'SAVAŞ VE BARIŞ', author: 'TOLSTOY', publicationDate: '2018', isRented: false, rentDays: 0, rentEndDate: null },
+            { id: 3, title: 'KELEBEĞİN RÜYASI', author: 'YILMAZ ERDOĞAN', publicationDate: '2019', isRented: false, rentDays: 0, rentEndDate: null },
+            { id: 4, title: 'SUÇ VE CEZA', author: 'DOSTOYEVSKİ', publicationDate: '2006', isRented: false, rentDays: 0, rentEndDate: null },
+            { id: 5, title: 'DOKUZA KADAR ON', author: 'ÖZDEMİR ASAF', publicationDate: '2010', isRented: false, rentDays: 0, rentEndDate: null }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const bookListContainer = document.getElementById('bookList');
+            updateBookList(bookListContainer);
+        });
+
+        function updateBookList(container) {
+            container.innerHTML = '';
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('book-card');
+                bookCard.innerHTML = `
+                    <h3>${book.title}</h3>
+                    <p>Yazar: ${book.author}</p>
+                    <p>Basım Tarihi: ${book.publicationDate}</p>
+                    <p>Kiralama Süresi: ${book.rentDays > 0 ? book.rentDays + ' gün' : 'Henüz kiralanmadı'}</p>
+                    ${book.isRented ? 
+                        '<p style="color: red;">Kiralandı</p><button class="cancel-button" onclick="cancelRent(' + book.id + ')">İptal Et</button>' : 
+                        `
+                        <input type="number" class="days-input" id="daysInput-${book.id}" placeholder="Gün" min="1">
+                        <button class="rent-button" onclick="rentBook(${book.id})">Kirala</button>
+                        `
+                    }
+                `;
+                container.appendChild(bookCard);
+            });
+        }
+
+        function rentBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            const daysInput = document.getElementById(`daysInput-${book.id}`);
+            const rentDays = parseInt(daysInput.value);
+
+            if (!rentDays || rentDays <= 0) {
+                alert('Lütfen geçerli bir gün sayısı giriniz.');
+                return;
+            }
+
+            if (book && !book.isRented) {
+                book.isRented = true;
+                book.rentDays = rentDays;
+                const now = new Date();
+                book.rentEndDate = new Date(now.getTime() + rentDays * 24 * 60 * 60 * 1000);
+                alert(`${book.title} kitabı ${rentDays} günlüğüne kiralandı!`);
+                updateBookList(document.getElementById('bookList'));
+            }
+        }
+
+        function cancelRent(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (book && book.isRented) {
+                book.isRented = false;
+                book.rentDays = 0;
+                book.rentEndDate = null;
+                alert(book.title + ' kitabı iade edildi!');
+                updateBookList(document.getElementById('bookList'));
+            }
+        }
+    </script>
+
+</body>
+</html>

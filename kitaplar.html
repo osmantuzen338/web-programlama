@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitaplar</title>
+    <style>
+        /* Sayfa stili */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('kitapp.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+      
+
+        h1 {
+            text-align: center;
+            color: #007BFF;  
+            font-size: 3rem;  
+            font-weight: bold;  
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);  
+            margin-bottom: 30px;  
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .books {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .book-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .book-card img {
+            max-width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .book-card h3 {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .book-card p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .book-card .author {
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .book-card .publication-date {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Butonlar başlangıçta gizli */
+        .buttons {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .buttons button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Ana sayfa butonu */
+        .home-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>KİTAPLAR</h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Kitap adı girin...">
+            <button onclick="searchBook()">Kitap Ara</button>
+        </div>
+        <div class="books" id="bookContainer">
+            <!-- Kitap kartları burada gösterilecek -->
+        </div>
+
+        <!-- Favoriler ve Ana sayfa butonları -->
+        <a href="favoriler.html" style="display: block; text-align: center; margin-top: 20px; font-size: 18px; color: #007BFF;">Favoriler Sayfasına Git</a>
+        <a href="kitap.html" class="home-btn">Ana Sayfaya Dön</a>
+    </div>
+
+    <script>
+        // Örnek kitap verileri
+        const books = [
+            { id: 1, title: 'SEFİLLER', author: 'VİCTOR HUGO', publicationDate: '2020', img: 'sefiller.jpg' },
+            { id: 2, title: 'SAVAŞ VE BARIŞ', author: 'TOLSTOY', publicationDate: '2018', img: 'SAVAS VE bARIŞ.jpg' },
+            { id: 3, title: 'KELEBEĞİN RÜYASI', author: 'YILMAZ ERDOĞAN', publicationDate: '2019', img: 'kelebek.jpg' },
+            { id: 4, title: 'SUÇ VE CEZA', author: 'DOSTOYEVSKİ', publicationDate: '2006', img: 'suç ve ceza.jpg' },
+            { id: 5, title: 'DOKUZA KADAR ON', author: 'ÖZDEMİR ASAF', publicationDate: '2010', img: 'dokuza kadadr.jpg' }
+        ];
+
+        // Sayfa yüklendiğinde kitapları ekrana yükleme
+        document.addEventListener('DOMContentLoaded', function () {
+            displayBooks(books);
+        });
+
+        // Kitapları ekrana getirme
+        function displayBooks(bookList) {
+            const bookContainer = document.getElementById('bookContainer');
+            bookContainer.innerHTML = '';
+            bookList.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('book-card');
+                bookCard.innerHTML = `
+                    <img src="${book.img}" alt="${book.title} Resmi" onclick="showButtons(${book.id})">
+                    <h3>${book.title}</h3>
+                    <p class="author">Yazar: ${book.author}</p>
+                    <p class="publication-date">Basım Tarihi: ${book.publicationDate}</p>
+                    <div class="buttons" id="buttons-${book.id}">
+                        <button onclick="addToFavorites(${book.id}, '${book.title}', '${book.author}')">Favorilere Ekle</button>
+                        <button onclick="rentBook(${book.id})">Kitabı Kirala</button>
+                    </div>
+                `;
+                bookContainer.appendChild(bookCard);
+            });
+        }
+
+        // Resme tıklandığında butonları göster
+        function showButtons(bookId) {
+            // İlk olarak tüm butonları gizle
+            for (let i = 1; i <= books.length; i++) {
+                document.getElementById('buttons-' + i).style.display = 'none';
+            }
+            // Seçilen kitabın butonlarını göster
+            document.getElementById('buttons-' + bookId).style.display = 'block';
+        }
+
+        // Favorilere ekleme işlevi
+        function addToFavorites(bookId, title, author) {
+            const bookData = {
+                id: bookId,
+                title: title,
+                author: author
+            };
+
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            favorites.push(bookData);
+
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+
+            alert(title + ' favorilere eklendi!');
+            window.location.href = 'favoriler.html';
+        }
+
+        // Kitap kiralama işlevi
+        function rentBook(bookId) {
+            window.location.href = 'kiralama.html';
+        }
+
+        // Kitap arama işlevi
+        function searchBook() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchInput));
+            displayBooks(filteredBooks);
+        }
+    </script>
+
+</body>
+</html>
